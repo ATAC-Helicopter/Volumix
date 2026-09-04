@@ -89,10 +89,9 @@ Canonical ticket format:
 - [x] `VMX-0011` `P0` Build an isolated PipeWire integration-test harness.
   - Scope: controlled daemon/socket, silent streams, deterministic teardown, and no mutation of unrelated user sessions.
   - Acceptance: CI-capable tests cover connect, add, change, remove, volume, mute, and reconnect without physical hardware.
-- [ ] `VMX-0012` `P1` Qualify Firefox multi-stream identity.
-  - Status: In progress; deterministic `/proc`, XDG, grouping, command fan-out, and recreation coverage is implemented. A real Firefox observation remains required.
-  - Scope: multiple Firefox playback streams, `/proc`/desktop evidence, grouping, and stream recreation.
-  - Acceptance: Firefox appears once with a stable canonical XDG identity and every owned session follows commands.
+- [x] `VMX-0012` `P1` Qualify browser multi-stream identity with Brave.
+  - Scope: multiple Brave playback streams, launcher-wrapper `/proc`/desktop evidence, grouping, command fan-out, and stream recreation.
+  - Acceptance: Brave appears once with a stable canonical XDG identity and every owned session follows commands.
 - [ ] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
   - Scope: renderer/process ambiguity, desktop corroboration, grouping, and diagnostics.
   - Acceptance: the user-facing identity is the installed application, not Electron or a renderer helper.

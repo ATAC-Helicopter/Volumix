@@ -1,7 +1,7 @@
 # Roadmap
 
 - **M0:** PipeWire application identity spike—current work.
-- **M0.2:** Isolated reconnect testing and Firefox/Discord/Proton qualification.
+- **M0.2:** Isolated reconnect testing and Brave/Firefox, Electron, and Proton qualification.
 - **0.2:** Harden application identity, icons, and grouping.
 - **0.3:** SQLite persistence, pin/hide, remembered volume, and ordering.
 - **0.4:** Steam/Proton/Wine identity.

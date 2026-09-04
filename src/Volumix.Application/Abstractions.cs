@@ -27,6 +27,7 @@ public sealed record DesktopApplicationEntry(
 public interface IDesktopApplicationIndex
 {
     IReadOnlyList<DesktopApplicationEntry> FindByExecutable(string executablePath);
+    IReadOnlyList<DesktopApplicationEntry> FindById(string desktopFileId);
 }
 
 public interface ISteamApplicationResolver

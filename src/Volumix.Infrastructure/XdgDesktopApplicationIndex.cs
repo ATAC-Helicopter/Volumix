@@ -30,6 +30,17 @@ public sealed class XdgDesktopApplicationIndex : IDesktopApplicationIndex
             .ToArray();
     }
 
+    public IReadOnlyList<DesktopApplicationEntry> FindById(string desktopFileId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(desktopFileId);
+        string normalized = desktopFileId.EndsWith(".desktop", StringComparison.OrdinalIgnoreCase)
+            ? desktopFileId[..^8]
+            : desktopFileId;
+        return _entries
+            .Where(entry => entry.Id.Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+    }
+
     public static IEnumerable<string> GetStandardApplicationDirectories()
     {
         string dataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME") ??

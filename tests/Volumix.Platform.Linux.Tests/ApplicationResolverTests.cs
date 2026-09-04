@@ -59,6 +59,28 @@ public sealed class ApplicationResolverTests
     }
 
     [Fact]
+    public async Task ExactDesktopIdHintCorroboratesWrapperExecutable()
+    {
+        var resolver = new ApplicationResolver(
+            new FixedProcessProvider(new(9, "/opt/brave.com/brave/brave", ["brave", "--type=utility"])),
+            new XdgDesktopApplicationIndex([DesktopFixtures]));
+        AudioSession session = Session(processId: 9, applicationId: null) with
+        {
+            ApplicationName = "Brave",
+            ApplicationIconName = "brave-browser",
+            ProcessBinary = "brave"
+        };
+
+        ApplicationIdentity identity = await resolver.ResolveAsync(session, TestContext.Current.CancellationToken);
+
+        Assert.Equal(new ApplicationId("xdg:brave-browser"), identity.Id);
+        Assert.Equal("Brave Web Browser", identity.DisplayName);
+        Assert.Equal(IdentityConfidence.High, identity.Confidence);
+        Assert.Contains(identity.Evidence, evidence =>
+            evidence.Kind == IdentityEvidenceKind.DesktopEntry && evidence.Value == "brave-browser");
+    }
+
+    [Fact]
     public async Task UnknownIdentityHashDoesNotDependOnPid()
     {
         var resolver = Resolver(process: null);
@@ -97,6 +119,7 @@ public sealed class ApplicationResolverTests
     private sealed class EmptyDesktopIndex : IDesktopApplicationIndex
     {
         public IReadOnlyList<DesktopApplicationEntry> FindByExecutable(string executablePath) => [];
+        public IReadOnlyList<DesktopApplicationEntry> FindById(string desktopFileId) => [];
     }
 
     private sealed class AmbiguousDesktopIndex : IDesktopApplicationIndex
@@ -106,5 +129,7 @@ public sealed class ApplicationResolverTests
             new("one", "One", executablePath, null, null, false, false, "one.desktop"),
             new("two", "Two", executablePath, null, null, false, false, "two.desktop")
         ];
+
+        public IReadOnlyList<DesktopApplicationEntry> FindById(string desktopFileId) => [];
     }
 }
