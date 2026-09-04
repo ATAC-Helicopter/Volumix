@@ -1,8 +1,10 @@
 <p align="center">
-  <img src="assets/branding/source/volumix-icon-master.svg" width="112" alt="Volumix logo: three vertical volume faders">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/branding/raster/volumix-wordmark-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/branding/raster/volumix-wordmark-light.png">
+    <img src="assets/branding/raster/volumix-wordmark-light.png" width="640" alt="Volumix wordmark with four colorful volume faders">
+  </picture>
 </p>
-
-<h1 align="center">Volumix</h1>
 
 <p align="center">
   A Linux volume mixer that controls applications—not raw audio streams.

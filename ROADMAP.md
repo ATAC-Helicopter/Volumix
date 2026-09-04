@@ -109,6 +109,9 @@ Canonical ticket format:
 - [x] `BUG-00001` `P0` Keep roadmap synchronization working after a milestone closes.
   - Scope: update managed issues through the GitHub REST API using milestone numbers instead of CLI lookup by open-milestone title.
   - Acceptance: a full apply can update issues assigned to closed `M0` and synchronize every project item without error.
+- [x] `VMX-0018` `P1` Establish the first public Volumix branding and project presence.
+  - Scope: curate theme-aware repository wordmarks, preserve descriptive asset names, and publish an honest FG Labs project page linked to source and roadmap.
+  - Acceptance: repository and website builds use the selected assets, describe the current early-development state accurately, and expose no generated filenames publicly.
 - [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
   - Scope: collect evidence for Firefox, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
@@ -195,7 +198,7 @@ Canonical ticket format:
 
 ## Identifier ledger
 
-- Next `VMX-00xx`: `VMX-0018`
+- Next `VMX-00xx`: `VMX-0019`
 - Next `VMX-02xx`: `VMX-0207`
 - Next `VMX-03xx`: `VMX-0306`
 - Next `VMX-04xx`: `VMX-0406`
