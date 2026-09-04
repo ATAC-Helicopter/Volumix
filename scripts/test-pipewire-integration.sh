@@ -66,6 +66,32 @@ wait_for_pattern() {
     exit 1
 }
 
+read_apps_until() {
+    local pattern="$1"
+    local output=""
+    for _ in {1..5}; do
+        output="$(dotnet run --project "$cli_project" --no-build -- apps)"
+        if rg -F "$pattern" <<<"$output" >/dev/null; then
+            printf '%s\n' "$output"
+            return
+        fi
+        sleep 0.2
+    done
+    echo "Timed out waiting for application snapshot containing '$pattern':" >&2
+    printf '%s\n' "$output" >&2
+    exit 1
+}
+
+assert_contains() {
+    local output="$1"
+    local pattern="$2"
+    if ! rg -F "$pattern" <<<"$output" >/dev/null; then
+        echo "Application snapshot did not contain '$pattern':" >&2
+        printf '%s\n' "$output" >&2
+        exit 1
+    fi
+}
+
 start_pipewire "$runtime_directory/pipewire-initial.log"
 
 stream_properties='{ application.name = "Volumix Integration Fixture" application.id = "dev.fglabs.Volumix.IntegrationFixture" }'
@@ -79,27 +105,23 @@ second_stream_pid=$!
 sleep 0.25
 
 cli_project="$repository_root/src/Volumix.Cli/Volumix.Cli.csproj"
-initial="$(dotnet run --project "$cli_project" --no-build -- apps)"
-printf '%s\n' "$initial" | rg -F "Canonical ID: pipewire:dev.fglabs.volumix.integrationfixture" >/dev/null
-printf '%s\n' "$initial" | rg -F "Sessions: 2" >/dev/null
-printf '%s\n' "$initial" | rg -F "Volume: 100%" >/dev/null
+initial="$(read_apps_until "Sessions: 2")"
+assert_contains "$initial" "Canonical ID: pipewire:dev.fglabs.volumix.integrationfixture"
+assert_contains "$initial" "Volume: 100%"
 
 dotnet run --project "$cli_project" --no-build -- \
     set pipewire:dev.fglabs.volumix.integrationfixture 35 >/dev/null
-after_volume="$(dotnet run --project "$cli_project" --no-build -- apps)"
-printf '%s\n' "$after_volume" | rg -F "Sessions: 2" >/dev/null
-printf '%s\n' "$after_volume" | rg -F "Volume: 35%" >/dev/null
+after_volume="$(read_apps_until "Volume: 35%")"
+assert_contains "$after_volume" "Sessions: 2"
 
 dotnet run --project "$cli_project" --no-build -- \
     mute pipewire:dev.fglabs.volumix.integrationfixture >/dev/null
-after_mute="$(dotnet run --project "$cli_project" --no-build -- apps)"
-printf '%s\n' "$after_mute" | rg -F "Muted: true" >/dev/null
+after_mute="$(read_apps_until "Muted: true")"
 
 kill "$second_stream_pid"
 wait "$second_stream_pid" 2>/dev/null || true
 second_stream_pid=""
-after_removal="$(dotnet run --project "$cli_project" --no-build -- apps)"
-printf '%s\n' "$after_removal" | rg -F "Sessions: 1" >/dev/null
+after_removal="$(read_apps_until "Sessions: 1")"
 
 dotnet run --project "$cli_project" --no-build -- apps --watch \
     >"$runtime_directory/watch.log" 2>&1 &
@@ -127,8 +149,7 @@ if ! kill -0 "$watcher_pid" 2>/dev/null; then
     exit 1
 fi
 
-after_restart="$(dotnet run --project "$cli_project" --no-build -- apps)"
-printf '%s\n' "$after_restart" | rg -F "Canonical ID: pipewire:dev.fglabs.volumix.restartfixture" >/dev/null
-printf '%s\n' "$after_restart" | rg -F "Sessions: 1" >/dev/null
+after_restart="$(read_apps_until "Canonical ID: pipewire:dev.fglabs.volumix.restartfixture")"
+assert_contains "$after_restart" "Sessions: 1"
 
 echo "Isolated PipeWire integration test passed."
