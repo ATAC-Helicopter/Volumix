@@ -55,6 +55,11 @@ public sealed class ApplicationResolver(
                     "Executable matched multiple desktop entries; no desktop identity was guessed."));
             }
 
+            else if (TryResolveDesktopHint(session, executablePath, evidence) is { } hintedIdentity)
+            {
+                return hintedIdentity;
+            }
+
             return ExecutableIdentity(session, executablePath, evidence);
         }
 
@@ -126,6 +131,47 @@ public sealed class ApplicationResolver(
             Confidence = Path.IsPathRooted(executablePath) ? IdentityConfidence.Medium : IdentityConfidence.Low,
             Evidence = evidence
         };
+
+    private ApplicationIdentity? TryResolveDesktopHint(
+        AudioSession session,
+        string executablePath,
+        List<IdentityEvidence> evidence)
+    {
+        foreach ((string? hint, string source) in new[]
+                 {
+                     (session.ApplicationId, "PipeWire application ID"),
+                     (session.ApplicationIconName, "PipeWire icon name")
+                 })
+        {
+            if (string.IsNullOrWhiteSpace(hint))
+            {
+                continue;
+            }
+
+            IReadOnlyList<DesktopApplicationEntry> matches = desktopApplications.FindById(hint);
+            if (matches.Count != 1)
+            {
+                continue;
+            }
+
+            DesktopApplicationEntry desktop = matches[0];
+            evidence.Add(new(IdentityEvidenceKind.DesktopEntry, desktop.Id,
+                $"{source} exactly matched an installed XDG desktop entry."));
+            return new ApplicationIdentity
+            {
+                Id = new($"xdg:{desktop.Id}"),
+                DisplayName = desktop.Name,
+                DesktopFileId = desktop.Id,
+                ExecutablePath = executablePath,
+                ExecutableName = Path.GetFileName(executablePath),
+                Icon = desktop.Icon is null ? IconFromPipeWire(session) : new(desktop.Icon),
+                Confidence = IdentityConfidence.High,
+                Evidence = evidence
+            };
+        }
+
+        return null;
+    }
 
     private static List<IdentityEvidence> BuildPipeWireEvidence(AudioSession session)
     {

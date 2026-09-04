@@ -31,4 +31,12 @@ public sealed class DesktopEntryTests
         var index = new XdgDesktopApplicationIndex([Fixtures]);
         Assert.Equal("Firefox", Assert.Single(index.FindByExecutable("/different/path/firefox")).Name);
     }
+
+    [Fact]
+    public void IndexMatchesDesktopIdWithOrWithoutSuffix()
+    {
+        var index = new XdgDesktopApplicationIndex([Fixtures]);
+        Assert.Equal("Brave Web Browser", Assert.Single(index.FindById("brave-browser")).Name);
+        Assert.Equal("Brave Web Browser", Assert.Single(index.FindById("brave-browser.desktop")).Name);
+    }
 }

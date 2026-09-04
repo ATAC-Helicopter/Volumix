@@ -7,7 +7,12 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 ### Added
 
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
+- `VMX-0012` Deterministic browser fixtures and a real Brave multi-stream qualification covering XDG identity, grouping, command fan-out, removal, and recreation.
 - `VMX-0018` Theme-aware repository wordmarks and curated public presentation artwork for the FG Labs project page.
+
+### Changed
+
+- `VMX-0012` Exact PipeWire desktop-ID hints can corroborate installed applications whose launchers wrap a differently named runtime executable.
 
 ### Fixed
 
