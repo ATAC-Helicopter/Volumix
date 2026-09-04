@@ -111,6 +111,9 @@ Canonical ticket format:
 - [x] `BUG-00001` `P0` Keep roadmap synchronization working after a milestone closes.
   - Scope: update managed issues through the GitHub REST API using milestone numbers instead of CLI lookup by open-milestone title.
   - Acceptance: a full apply can update issues assigned to closed `M0` and synchronize every project item without error.
+- [x] `BUG-00002` `P0` Flush native stream commands before short-lived client teardown.
+  - Scope: wait for a PipeWire core round trip after successful volume and mute parameter requests.
+  - Acceptance: isolated integration clients can exit immediately after a successful command without dropping that command.
 - [x] `VMX-0018` `P1` Establish the first public Volumix branding and project presence.
   - Scope: curate theme-aware repository wordmarks, preserve descriptive asset names, and publish an honest FG Labs project page linked to source and roadmap.
   - Acceptance: repository and website builds use the selected assets, describe the current early-development state accurately, and expose no generated filenames publicly.
@@ -210,5 +213,5 @@ Canonical ticket format:
 - Next `VMX-08xx`: `VMX-0806`
 - Next `VMX-09xx`: `VMX-0905`
 - Next `VMX-10xx`: `VMX-1005`
-- Next `BUG`: `BUG-00002`
+- Next `BUG`: `BUG-00003`
 - Next `REL`: `REL-00012`

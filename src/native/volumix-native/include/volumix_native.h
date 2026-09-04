@@ -58,7 +58,8 @@ void vm_context_destroy(vm_context *context);
 int vm_start(vm_context *context);
 void vm_stop(vm_context *context);
 
-/* Commands are serialized onto the PipeWire loop. Volume is normalized 0..1. */
+/* Commands are serialized onto the PipeWire loop. A successful return includes
+ * a PipeWire core round trip. Volume is normalized 0..1. */
 int vm_set_stream_volume(vm_context *context, uint32_t node_id, float volume);
 int vm_set_stream_mute(vm_context *context, uint32_t node_id, uint8_t muted);
 
