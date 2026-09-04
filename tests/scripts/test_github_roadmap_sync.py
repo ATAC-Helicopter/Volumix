@@ -2,6 +2,7 @@ import importlib.util
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,32 @@ class GitHubRoadmapSyncTests(unittest.TestCase):
         self.assertEqual("one", github_sync.option_id(field, "P1"))
         with self.assertRaises(RuntimeError):
             github_sync.option_id(field, "P0")
+
+    def test_existing_issue_update_uses_closed_milestone_number(self):
+        ticket = github_sync.Ticket(
+            identifier="VMX-0001",
+            title="Build the foundation.",
+            priority="P0",
+            milestone="M0",
+            details=(),
+            completed=False,
+        )
+        existing = {
+            "VMX-0001": {
+                "number": 4,
+                "url": "https://github.com/example/issues/4",
+                "body": f"{github_sync.MANAGED_MARKER}\n",
+            }
+        }
+        with mock.patch.object(github_sync, "issue_index", return_value=existing), \
+                mock.patch.object(github_sync, "run_gh", return_value="") as run_gh:
+            urls = github_sync.sync_issues([ticket], {"M0": 7})
+
+        self.assertEqual(["https://github.com/example/issues/4"], urls)
+        patch_call = run_gh.call_args_list[0].args[0]
+        self.assertEqual(["api", "--method", "PATCH"], patch_call[:3])
+        self.assertIn("milestone=7", patch_call)
+        self.assertNotIn("issue", patch_call[:3])
 
 
 if __name__ == "__main__":

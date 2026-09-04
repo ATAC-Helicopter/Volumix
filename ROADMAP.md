@@ -106,6 +106,9 @@ Canonical ticket format:
 - [ ] `VMX-0017` `P1` Enforce protected mainline collaboration on GitHub.
   - Scope: protect `main` from deletion and force-pushes, require pull requests and the strict `linux` status check, and preserve an auditable repository policy.
   - Acceptance: an active GitHub ruleset enforces the documented policy; any hosting-plan or visibility dependency remains explicitly tracked until resolved.
+- [x] `BUG-00001` `P0` Keep roadmap synchronization working after a milestone closes.
+  - Scope: update managed issues through the GitHub REST API using milestone numbers instead of CLI lookup by open-milestone title.
+  - Acceptance: a full apply can update issues assigned to closed `M0` and synchronize every project item without error.
 - [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
   - Scope: collect evidence for Firefox, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
@@ -202,5 +205,5 @@ Canonical ticket format:
 - Next `VMX-08xx`: `VMX-0806`
 - Next `VMX-09xx`: `VMX-0905`
 - Next `VMX-10xx`: `VMX-1005`
-- Next `BUG`: `BUG-00001`
+- Next `BUG`: `BUG-00002`
 - Next `REL`: `REL-00012`
