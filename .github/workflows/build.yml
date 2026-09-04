@@ -36,3 +36,29 @@ jobs:
           dotnet test Volumix.slnx --configuration Debug --no-build
       - name: Isolated PipeWire integration test
         run: ./scripts/test-pipewire-integration.sh
+
+  native-sanitizers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASAN_OPTIONS: detect_leaks=0:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.3xx
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libpipewire-0.3-dev libspa-0.2-dev libasound2-dev pipewire-bin ripgrep
+      - name: Build with ASAN and UBSAN
+        env:
+          CFLAGS: -fsanitize=address,undefined -fno-omit-frame-pointer
+        run: ./scripts/build.sh
+      - name: Test native lifecycle under sanitizers
+        run: ctest --test-dir build/native --output-on-failure
+      - name: Test PipeWire churn and reconnect under sanitizers
+        run: |
+          export VOLUMIX_SANITIZER_PRELOAD="$(gcc -print-file-name=libasan.so):$(gcc -print-file-name=libubsan.so)"
+          ./scripts/test-pipewire-integration.sh

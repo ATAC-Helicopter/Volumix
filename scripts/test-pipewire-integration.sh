@@ -15,9 +15,10 @@ pipewire_pid=""
 first_stream_pid=""
 second_stream_pid=""
 watcher_pid=""
+churn_pid=""
 
 cleanup() {
-    for process_id in "$watcher_pid" "$first_stream_pid" "$second_stream_pid" "$pipewire_pid"; do
+    for process_id in "$churn_pid" "$watcher_pid" "$first_stream_pid" "$second_stream_pid" "$pipewire_pid"; do
         if [[ -n "$process_id" ]]; then
             kill "$process_id" 2>/dev/null || true
         fi
@@ -74,11 +75,19 @@ wait_for_pattern() {
     exit 1
 }
 
+run_dotnet() {
+    if [[ -n "${VOLUMIX_SANITIZER_PRELOAD:-}" ]]; then
+        env LD_PRELOAD="$VOLUMIX_SANITIZER_PRELOAD" dotnet "$@"
+    else
+        dotnet "$@"
+    fi
+}
+
 read_apps_until() {
     local pattern="$1"
     local output=""
     for _ in {1..5}; do
-        output="$(dotnet run --project "$cli_project" --no-build -- apps)"
+        output="$(run_dotnet run --project "$cli_project" --no-build -- apps)"
         if rg -F "$pattern" <<<"$output" >/dev/null; then
             printf '%s\n' "$output"
             return
@@ -137,12 +146,12 @@ assert_contains "$initial" "Confidence: High"
 assert_contains "$initial" "Icon: firefox"
 assert_contains "$initial" "Volume: 100%"
 
-dotnet run --project "$cli_project" --no-build -- \
+run_dotnet run --project "$cli_project" --no-build -- \
     set xdg:firefox 35 >/dev/null
 after_volume="$(read_apps_until "Volume: 35%")"
 assert_contains "$after_volume" "Sessions: 2"
 
-dotnet run --project "$cli_project" --no-build -- \
+run_dotnet run --project "$cli_project" --no-build -- \
     mute xdg:firefox >/dev/null
 after_mute="$(read_apps_until "Muted: true")"
 
@@ -163,10 +172,26 @@ kill "$second_stream_pid"
 wait "$second_stream_pid" 2>/dev/null || true
 second_stream_pid=""
 
-dotnet run --project "$cli_project" --no-build -- apps --watch \
+run_dotnet run --project "$cli_project" --no-build -- apps --watch \
     >"$runtime_directory/watch.log" 2>&1 &
 watcher_pid=$!
 wait_for_pattern "$runtime_directory/watch.log" "Canonical ID: xdg:firefox"
+
+churn_properties='{ application.name = "Volumix Churn Fixture" application.id = "dev.fglabs.Volumix.ChurnFixture" }'
+for index in {1..12}; do
+    pw-cat --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.1 \
+        -P "$churn_properties" - </dev/zero >"$runtime_directory/churn-$index.log" 2>&1 &
+    churn_pid=$!
+    sleep 0.08
+    kill "$churn_pid" 2>/dev/null || true
+    wait "$churn_pid" 2>/dev/null || true
+    churn_pid=""
+done
+wait_for_pattern "$runtime_directory/watch.log" "Canonical ID: pipewire:dev.fglabs.volumix.churnfixture"
+if ! kill -0 "$watcher_pid" 2>/dev/null; then
+    echo "The watching client exited during rapid node churn." >&2
+    exit 1
+fi
 
 kill "$first_stream_pid"
 wait "$first_stream_pid" 2>/dev/null || true
@@ -197,12 +222,12 @@ if [[ "$(rg -c '^Application:' <<<"$after_restart")" -ne 1 ]]; then
     exit 1
 fi
 
-dotnet run --project "$cli_project" --no-build -- \
+run_dotnet run --project "$cli_project" --no-build -- \
     set pipewire:dev.fglabs.volumix.restartfixture 45 >/dev/null
 after_restart_volume="$(read_apps_until "Volume: 45%")"
 assert_contains "$after_restart_volume" "Sessions: 1"
 
-dotnet run --project "$cli_project" --no-build -- \
+run_dotnet run --project "$cli_project" --no-build -- \
     mute pipewire:dev.fglabs.volumix.restartfixture >/dev/null
 after_restart_mute="$(read_apps_until "Muted: true")"
 assert_contains "$after_restart_mute" "Sessions: 1"

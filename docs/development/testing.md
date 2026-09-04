@@ -14,3 +14,4 @@ The opt-in isolated PipeWire test is enabled with `VOLUMIX_RUN_PIPEWIRE_INTEGRAT
 
 Browser qualification evidence and its reproducible checklist are documented in [qualifying-browser.md](qualifying-browser.md).
 PipeWire restart and command-recovery evidence is documented in [qualifying-reconnect.md](qualifying-reconnect.md).
+Native ownership and sanitizer coverage is documented in [native-sanitizers.md](native-sanitizers.md).

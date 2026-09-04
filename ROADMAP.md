@@ -101,7 +101,7 @@ Canonical ticket format:
 - [x] `VMX-0015` `P0` Qualify PipeWire restart and reconnect end to end.
   - Scope: disconnect signal, unavailable snapshot, bounded backoff, registry rebuild, stale-event rejection, and command recovery.
   - Acceptance: an isolated PipeWire restart produces no duplicate applications and resumes correct control.
-- [ ] `VMX-0016` `P1` Harden native ownership and sanitizer coverage.
+- [x] `VMX-0016` `P1` Harden native ownership and sanitizer coverage.
   - Scope: ASAN/UBSAN test job, callback lifetime stress, rapid node churn, and shutdown races.
   - Acceptance: native tests are clean under sanitizers with deterministic lifecycle behavior.
 - [ ] `VMX-0017` `P1` Enforce protected mainline collaboration on GitHub.
