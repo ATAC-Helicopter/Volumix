@@ -1,0 +1,11 @@
+<Project>
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <Target Name="CopyVolumixNativeLibrary"
+          AfterTargets="Build"
+          Condition="Exists('$(MSBuildThisFileDirectory)build/native/libvolumix_native.so')">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)build/native/libvolumix_native.so"
+          DestinationFolder="$(OutDir)" />
+  </Target>
+</Project>
