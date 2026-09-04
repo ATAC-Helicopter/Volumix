@@ -191,5 +191,20 @@ fi
 
 after_restart="$(read_apps_until "Canonical ID: pipewire:dev.fglabs.volumix.restartfixture")"
 assert_contains "$after_restart" "Sessions: 1"
+if [[ "$(rg -c '^Application:' <<<"$after_restart")" -ne 1 ]]; then
+    echo "The rebuilt registry contained duplicate applications:" >&2
+    printf '%s\n' "$after_restart" >&2
+    exit 1
+fi
+
+dotnet run --project "$cli_project" --no-build -- \
+    set pipewire:dev.fglabs.volumix.restartfixture 45 >/dev/null
+after_restart_volume="$(read_apps_until "Volume: 45%")"
+assert_contains "$after_restart_volume" "Sessions: 1"
+
+dotnet run --project "$cli_project" --no-build -- \
+    mute pipewire:dev.fglabs.volumix.restartfixture >/dev/null
+after_restart_mute="$(read_apps_until "Muted: true")"
+assert_contains "$after_restart_mute" "Sessions: 1"
 
 echo "Isolated PipeWire integration test passed."

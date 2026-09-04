@@ -28,6 +28,18 @@ public sealed class MixerStateCoordinatorTests
         Assert.Equal("new", Assert.Single(Assert.Single(coordinator.Current.Applications).Sessions).Id.Value);
     }
 
+    [Fact]
+    public async Task DisconnectPublishesAnUnavailableEmptySnapshot()
+    {
+        var coordinator = new MixerStateCoordinator(new FixedResolver());
+        await coordinator.ApplyAsync(new SessionAdded(1, Session("connected", 20, 1f)), TestContext.Current.CancellationToken);
+
+        await coordinator.ApplyAsync(new BackendDisconnected(1, "fixture restart"), TestContext.Current.CancellationToken);
+
+        Assert.Empty(coordinator.Current.Applications);
+        Assert.Equal(2, coordinator.Current.Revision);
+    }
+
     private static AudioSession Session(string id, uint nodeId, float volume) => new()
     {
         Id = new(id),

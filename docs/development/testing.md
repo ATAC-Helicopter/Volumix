@@ -13,3 +13,4 @@ Resolver coverage should include missing/disappearing processes, ambiguous deskt
 The opt-in isolated PipeWire test is enabled with `VOLUMIX_RUN_PIPEWIRE_INTEGRATION=1 ./scripts/test.sh`. It uses a private runtime directory and unlinked silent streams, leaving the user's normal PipeWire instance and applications untouched.
 
 Browser qualification evidence and its reproducible checklist are documented in [qualifying-browser.md](qualifying-browser.md).
+PipeWire restart and command-recovery evidence is documented in [qualifying-reconnect.md](qualifying-reconnect.md).

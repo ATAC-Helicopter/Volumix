@@ -98,7 +98,7 @@ Canonical ticket format:
 - [ ] `VMX-0014` `P0` Add the first Steam/Proton identity fixture and qualification path.
   - Scope: synthetic process/compat metadata, resolver seam implementation, stable Steam ID, and one real-game comparison when available.
   - Acceptance: a Proton audio stream resolves to `steam:<app-id>` without using Wine loader or PID as identity.
-- [ ] `VMX-0015` `P0` Qualify PipeWire restart and reconnect end to end.
+- [x] `VMX-0015` `P0` Qualify PipeWire restart and reconnect end to end.
   - Scope: disconnect signal, unavailable snapshot, bounded backoff, registry rebuild, stale-event rejection, and command recovery.
   - Acceptance: an isolated PipeWire restart produces no duplicate applications and resumes correct control.
 - [ ] `VMX-0016` `P1` Harden native ownership and sanitizer coverage.
