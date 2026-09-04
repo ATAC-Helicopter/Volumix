@@ -19,6 +19,8 @@
 
 Roadmap scope and acceptance criteria win if a GitHub description drifts. Changes are made in the roadmap first, audited, then mirrored. Implementation details may live in issues; they cannot silently expand product scope.
 
+An incomplete ticket is Todo unless its roadmap details include `Status: In progress`; completed checkboxes always map to Done. This keeps execution state reproducible without a hard-coded active ticket in the synchronizer.
+
 Run the local integrity check with:
 
 ```bash

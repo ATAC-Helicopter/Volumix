@@ -11,6 +11,7 @@ This is the canonical product and delivery roadmap for Volumix. GitHub issues, m
 - Each execution item has exactly one owning ID.
 - `P0` is release-blocking reliability, security, privacy, or accessibility work; `P1` is primary milestone value; `P2` is valuable deferrable work.
 - Roadmap checkboxes are canonical delivery state. GitHub status, milestone, labels, and project fields must agree.
+- Active execution is declared with a nested `Status: In progress` line and mirrored to the GitHub Project; incomplete tickets without it remain Todo.
 - A changelog entry representing user-visible or release-scope work includes its owning ID.
 - Scope and acceptance text remain in this roadmap. GitHub issue bodies may add implementation notes without weakening this contract.
 
@@ -89,6 +90,7 @@ Canonical ticket format:
   - Scope: controlled daemon/socket, silent streams, deterministic teardown, and no mutation of unrelated user sessions.
   - Acceptance: CI-capable tests cover connect, add, change, remove, volume, mute, and reconnect without physical hardware.
 - [ ] `VMX-0012` `P1` Qualify Firefox multi-stream identity.
+  - Status: In progress; deterministic `/proc`, XDG, grouping, command fan-out, and recreation coverage is implemented. A real Firefox observation remains required.
   - Scope: multiple Firefox playback streams, `/proc`/desktop evidence, grouping, and stream recreation.
   - Acceptance: Firefox appears once with a stable canonical XDG identity and every owned session follows commands.
 - [ ] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.

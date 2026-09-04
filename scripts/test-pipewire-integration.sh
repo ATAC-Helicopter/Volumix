@@ -30,6 +30,13 @@ trap cleanup EXIT INT TERM
 export XDG_RUNTIME_DIR="$runtime_directory"
 export PIPEWIRE_RUNTIME_DIR="$runtime_directory"
 export PIPEWIRE_REMOTE="pipewire-0"
+export XDG_DATA_HOME="$runtime_directory/share"
+
+mkdir -p "$XDG_DATA_HOME/applications" "$runtime_directory/bin"
+cp "$repository_root/tests/fixtures/desktop-files/firefox.desktop" \
+    "$XDG_DATA_HOME/applications/firefox.desktop"
+firefox_fixture="$runtime_directory/bin/firefox"
+cp "$(command -v pw-cat)" "$firefox_fixture"
 
 start_pipewire() {
     local log_path="$1"
@@ -109,12 +116,13 @@ assert_process_running() {
 
 start_pipewire "$runtime_directory/pipewire-initial.log"
 
-stream_properties='{ application.name = "Volumix Integration Fixture" application.id = "dev.fglabs.Volumix.IntegrationFixture" }'
-pw-cat --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8 \
-    -P "$stream_properties" - </dev/zero >"$runtime_directory/stream-one.log" 2>&1 &
+bash -c 'exec "$1" --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8 \
+    -P "{ application.name = \"Firefox\" application.id = \"org.mozilla.firefox\" application.icon-name = \"firefox\" application.process.id = \"$$\" }" -' \
+    _ "$firefox_fixture" </dev/zero >"$runtime_directory/stream-one.log" 2>&1 &
 first_stream_pid=$!
-pw-cat --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8 \
-    -P "$stream_properties" - </dev/zero >"$runtime_directory/stream-two.log" 2>&1 &
+bash -c 'exec "$1" --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8 \
+    -P "{ application.name = \"Firefox\" application.id = \"org.mozilla.firefox\" application.icon-name = \"firefox\" application.process.id = \"$$\" }" -' \
+    _ "$firefox_fixture" </dev/zero >"$runtime_directory/stream-two.log" 2>&1 &
 second_stream_pid=$!
 
 sleep 0.25
@@ -123,16 +131,19 @@ assert_process_running "$second_stream_pid" "$runtime_directory/stream-two.log"
 
 cli_project="$repository_root/src/Volumix.Cli/Volumix.Cli.csproj"
 initial="$(read_apps_until "Sessions: 2")"
-assert_contains "$initial" "Canonical ID: pipewire:dev.fglabs.volumix.integrationfixture"
+assert_contains "$initial" "Application: Firefox"
+assert_contains "$initial" "Canonical ID: xdg:firefox"
+assert_contains "$initial" "Confidence: High"
+assert_contains "$initial" "Icon: firefox"
 assert_contains "$initial" "Volume: 100%"
 
 dotnet run --project "$cli_project" --no-build -- \
-    set pipewire:dev.fglabs.volumix.integrationfixture 35 >/dev/null
+    set xdg:firefox 35 >/dev/null
 after_volume="$(read_apps_until "Volume: 35%")"
 assert_contains "$after_volume" "Sessions: 2"
 
 dotnet run --project "$cli_project" --no-build -- \
-    mute pipewire:dev.fglabs.volumix.integrationfixture >/dev/null
+    mute xdg:firefox >/dev/null
 after_mute="$(read_apps_until "Muted: true")"
 
 kill "$second_stream_pid"
@@ -140,10 +151,22 @@ wait "$second_stream_pid" 2>/dev/null || true
 second_stream_pid=""
 after_removal="$(read_apps_until "Sessions: 1")"
 
+bash -c 'exec "$1" --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8 \
+    -P "{ application.name = \"Firefox\" application.id = \"org.mozilla.firefox\" application.icon-name = \"firefox\" application.process.id = \"$$\" }" -' \
+    _ "$firefox_fixture" </dev/zero >"$runtime_directory/stream-recreated.log" 2>&1 &
+second_stream_pid=$!
+after_recreation="$(read_apps_until "Sessions: 2")"
+assert_contains "$after_recreation" "Canonical ID: xdg:firefox"
+assert_contains "$after_recreation" "Confidence: High"
+
+kill "$second_stream_pid"
+wait "$second_stream_pid" 2>/dev/null || true
+second_stream_pid=""
+
 dotnet run --project "$cli_project" --no-build -- apps --watch \
     >"$runtime_directory/watch.log" 2>&1 &
 watcher_pid=$!
-wait_for_pattern "$runtime_directory/watch.log" "Canonical ID: pipewire:dev.fglabs.volumix.integrationfixture"
+wait_for_pattern "$runtime_directory/watch.log" "Canonical ID: xdg:firefox"
 
 kill "$first_stream_pid"
 wait "$first_stream_pid" 2>/dev/null || true
