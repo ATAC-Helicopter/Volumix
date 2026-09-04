@@ -85,7 +85,7 @@ Canonical ticket format:
 
 **Status:** Active.
 
-- [ ] `VMX-0011` `P0` Build an isolated PipeWire integration-test harness.
+- [x] `VMX-0011` `P0` Build an isolated PipeWire integration-test harness.
   - Scope: controlled daemon/socket, silent streams, deterministic teardown, and no mutation of unrelated user sessions.
   - Acceptance: CI-capable tests cover connect, add, change, remove, volume, mute, and reconnect without physical hardware.
 - [ ] `VMX-0012` `P1` Qualify Firefox multi-stream identity.
@@ -103,6 +103,9 @@ Canonical ticket format:
 - [ ] `VMX-0016` `P1` Harden native ownership and sanitizer coverage.
   - Scope: ASAN/UBSAN test job, callback lifetime stress, rapid node churn, and shutdown races.
   - Acceptance: native tests are clean under sanitizers with deterministic lifecycle behavior.
+- [ ] `VMX-0017` `P1` Enforce protected mainline collaboration on GitHub.
+  - Scope: protect `main` from deletion and force-pushes, require pull requests and the strict `linux` status check, and preserve an auditable repository policy.
+  - Acceptance: an active GitHub ruleset enforces the documented policy; any hosting-plan or visibility dependency remains explicitly tracked until resolved.
 - [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
   - Scope: collect evidence for Firefox, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
@@ -189,7 +192,7 @@ Canonical ticket format:
 
 ## Identifier ledger
 
-- Next `VMX-00xx`: `VMX-0017`
+- Next `VMX-00xx`: `VMX-0018`
 - Next `VMX-02xx`: `VMX-0207`
 - Next `VMX-03xx`: `VMX-0306`
 - Next `VMX-04xx`: `VMX-0406`

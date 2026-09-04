@@ -34,3 +34,5 @@ python3 scripts/github_roadmap_sync.py
 ```
 
 Maintainers may apply missing labels, milestones, issues, and project membership with `--apply --project-number <number>`. The synchronizer only rewrites issue bodies carrying its ownership marker; manually maintained bodies are preserved.
+
+Repository protections and their current enforcement state are recorded in [repository-rules.md](repository-rules.md). A hosting limitation never changes the intended collaboration policy; it remains a tracked work item until enforcement is active.
