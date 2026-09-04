@@ -2,6 +2,9 @@
 
 `ROADMAP.md` owns scope, identifiers, priorities, and completion state. GitHub mirrors execution through issues, milestones, and the **Volumix Roadmap** project.
 
+- Repository: <https://github.com/ATAC-Helicopter/Volumix>
+- Project: <https://github.com/users/ATAC-Helicopter/projects/9>
+
 ## Identity rules
 
 - `VMX-xxxx`: product or engineering work.

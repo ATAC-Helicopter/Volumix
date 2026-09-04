@@ -46,6 +46,8 @@ UI / MIDI / CLI / D-Bus
 
 The complete product contract is in [TECH_SPEC.md](TECH_SPEC.md). Start with the shorter [architecture overview](docs/architecture/overview.md) when contributing.
 
+Planning is tracked in the canonical [ROADMAP.md](ROADMAP.md) and mirrored to the private [Volumix Roadmap GitHub Project](https://github.com/users/ATAC-Helicopter/projects/9).
+
 ## Build
 
 Install the dependencies in [the Linux setup guide](docs/development/setup-linux.md), then run:

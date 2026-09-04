@@ -42,7 +42,8 @@ Canonical ticket format:
 
 ## M0 — PipeWire application identity spike
 
-**Status:** Complete locally; initial GitHub publication pending.
+**Status:** Complete and published.  
+**Tag:** `v0.1.0-m0`
 
 - [x] `VMX-0001` `P0` Establish the repository, solution, architecture rules, and open-source governance.
   - Scope: .NET solution, project boundaries, build policy, documentation, GPL license, contribution rules, and CI.

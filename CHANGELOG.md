@@ -4,6 +4,8 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ## [Unreleased]
 
+## [0.1.0-m0] - 2026-09-04
+
 ### Added
 
 - `VMX-0001` M0 repository scaffold, .NET 10 solution, governance, licensing, documentation, and CI.
@@ -16,3 +18,5 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 - `VMX-0008` Minimal Avalonia shell and theme infrastructure.
 - `VMX-0010` Managed reconnect supervision and controlled multi-session qualification.
 - `REL-00001` M0 build, test, native lifecycle, and live PipeWire evidence baseline.
+
+[0.1.0-m0]: https://github.com/ATAC-Helicopter/Volumix/releases/tag/v0.1.0-m0
