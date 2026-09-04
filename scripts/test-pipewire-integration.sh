@@ -79,6 +79,10 @@ read_apps_until() {
     done
     echo "Timed out waiting for application snapshot containing '$pattern':" >&2
     printf '%s\n' "$output" >&2
+    for log_path in "$runtime_directory"/*.log; do
+        echo "--- $log_path" >&2
+        sed -n '1,160p' "$log_path" >&2
+    done
     exit 1
 }
 
@@ -88,6 +92,16 @@ assert_contains() {
     if ! rg -F "$pattern" <<<"$output" >/dev/null; then
         echo "Application snapshot did not contain '$pattern':" >&2
         printf '%s\n' "$output" >&2
+        exit 1
+    fi
+}
+
+assert_process_running() {
+    local process_id="$1"
+    local log_path="$2"
+    if ! kill -0 "$process_id" 2>/dev/null; then
+        echo "Harness process exited unexpectedly; log follows:" >&2
+        sed -n '1,200p' "$log_path" >&2
         exit 1
     fi
 }
@@ -103,6 +117,8 @@ pw-cat --playback --target 0 --rate 48000 --channels 2 --format s16 --volume 0.8
 second_stream_pid=$!
 
 sleep 0.25
+assert_process_running "$first_stream_pid" "$runtime_directory/stream-one.log"
+assert_process_running "$second_stream_pid" "$runtime_directory/stream-two.log"
 
 cli_project="$repository_root/src/Volumix.Cli/Volumix.Cli.csproj"
 initial="$(read_apps_until "Sessions: 2")"
