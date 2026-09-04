@@ -21,11 +21,13 @@ class GitHubRoadmapSyncTests(unittest.TestCase):
   - Acceptance: The mirror is reproducible.
 ## M0.2 — Qualification
 - [ ] `REL-00002` `P1` Qualify the next milestone.
+  - Status: In progress; evidence collection is underway.
 """
         tickets = github_sync.parse_roadmap(roadmap)
         self.assertEqual(["VMX-0001", "REL-00002"], [item.identifier for item in tickets])
         self.assertTrue(tickets[0].completed)
         self.assertEqual("M0.2", tickets[1].milestone)
+        self.assertTrue(tickets[1].in_progress)
         self.assertIn("Scope: Keep one source", tickets[0].body)
         self.assertEqual("kind:rel", tickets[1].kind_label)
 

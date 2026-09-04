@@ -68,6 +68,12 @@ class Ticket:
     completed: bool
 
     @property
+    def in_progress(self) -> bool:
+        return not self.completed and any(
+            detail.startswith("- Status: In progress") for detail in self.details
+        )
+
+    @property
     def issue_title(self) -> str:
         return f"{self.identifier}: {self.title.rstrip('.')}"
 
@@ -305,9 +311,7 @@ mutation($project: ID!, $item: ID!) {
                 "api", "graphql", "-f", f"query={unarchive_mutation}",
                 "-f", f"project={project_id}", "-f", f"item={item['id']}",
             ])
-        status = "Done" if ticket.completed else (
-            "In Progress" if ticket.identifier == "VMX-0011" else "Todo"
-        )
+        status = "Done" if ticket.completed else "In Progress" if ticket.in_progress else "Todo"
         run_gh([
             "api", "graphql", "-f", f"query={mutation}",
             "-f", f"project={project_id}", "-f", f"item={item['id']}",

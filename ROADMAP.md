@@ -11,6 +11,7 @@ This is the canonical product and delivery roadmap for Volumix. GitHub issues, m
 - Each execution item has exactly one owning ID.
 - `P0` is release-blocking reliability, security, privacy, or accessibility work; `P1` is primary milestone value; `P2` is valuable deferrable work.
 - Roadmap checkboxes are canonical delivery state. GitHub status, milestone, labels, and project fields must agree.
+- Active execution is declared with a nested `Status: In progress` line and mirrored to the GitHub Project; incomplete tickets without it remain Todo.
 - A changelog entry representing user-visible or release-scope work includes its owning ID.
 - Scope and acceptance text remain in this roadmap. GitHub issue bodies may add implementation notes without weakening this contract.
 
