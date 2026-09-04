@@ -33,7 +33,8 @@ export PIPEWIRE_REMOTE="pipewire-0"
 
 start_pipewire() {
     local log_path="$1"
-    pipewire -c minimal.conf >"$log_path" 2>&1 &
+    pipewire -c "$repository_root/tests/fixtures/pipewire/volumix-test.conf" \
+        >"$log_path" 2>&1 &
     pipewire_pid=$!
 
     for _ in {1..100}; do
