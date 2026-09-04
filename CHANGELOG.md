@@ -7,6 +7,7 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 ### Added
 
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
+- `VMX-0018` Theme-aware repository wordmarks and curated public presentation artwork for the FG Labs project page.
 
 ### Fixed
 
