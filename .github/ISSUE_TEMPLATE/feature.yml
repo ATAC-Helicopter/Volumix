@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose an improvement within Volumix's product scope
+title: "feature: "
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Volumix controls application/device volume and physical-controller mappings. DSP, recording, routing graphs, virtual devices, accounts, and cloud services are intentionally out of scope.
+  - type: input
+    id: work_id
+    attributes:
+      label: Work ID
+      description: Reference an existing VMX-xxxx ID or leave blank for roadmap triage.
+      placeholder: VMX-0011
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the problem before proposing a solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: architecture
+    attributes:
+      label: Architecture, privacy, or accessibility impact
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This helps identify, control, persist, organize, or access application/device volume controls.
+          required: true

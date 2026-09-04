@@ -6,3 +6,6 @@ build/
 *.user
 *.swp
 *.so
+__pycache__/
+*.py[cod]
+.coverage

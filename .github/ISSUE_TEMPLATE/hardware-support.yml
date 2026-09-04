@@ -1,0 +1,50 @@
+name: Controller support
+description: Report or request support for MIDI or future controller hardware
+title: "controller: "
+labels: [controller, needs-triage]
+body:
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model
+    validations:
+      required: true
+  - type: input
+    id: usb_id
+    attributes:
+      label: USB vendor/product ID
+      description: Optional; do not include a unique serial number.
+  - type: textarea
+    id: ports
+    attributes:
+      label: MIDI input and output port names
+  - type: textarea
+    id: controls
+    attributes:
+      label: Controls and messages
+      description: List faders, encoders, buttons, channels, CC/note messages, and value ranges where known.
+    validations:
+      required: true
+  - type: dropdown
+    id: feedback
+    attributes:
+      label: Feedback capability
+      options: [None, LEDs, Motorized controls, Display, Unknown]
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Current and expected behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Distribution and package/build type
+    validations:
+      required: true

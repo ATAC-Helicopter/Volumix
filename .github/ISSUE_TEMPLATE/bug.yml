@@ -1,0 +1,86 @@
+name: Bug report
+description: Report a reproducible Volumix defect
+title: "bug: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve Volumix. Remove private data from diagnostics before attaching them.
+  - type: input
+    id: work_id
+    attributes:
+      label: Work ID
+      description: Leave blank for triage to allocate the next BUG-xxxxx ID.
+      placeholder: BUG-00001
+  - type: input
+    id: version
+    attributes:
+      label: Volumix version or commit
+      placeholder: 0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: distribution
+    attributes:
+      label: Linux distribution and version
+    validations:
+      required: true
+  - type: input
+    id: desktop
+    attributes:
+      label: Desktop environment and session
+      placeholder: GNOME 49, Wayland
+    validations:
+      required: true
+  - type: input
+    id: pipewire
+    attributes:
+      label: PipeWire version
+    validations:
+      required: true
+  - type: dropdown
+    id: build_type
+    attributes:
+      label: Installation or build type
+      options: [Source build, Tarball, Flatpak, Debian package, AppImage, Other]
+    validations:
+      required: true
+  - type: input
+    id: application
+    attributes:
+      label: Audio application affected
+      placeholder: Firefox, VLC, Proton game, or not application-specific
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      placeholder: Tell us the smallest reliable sequence that triggers the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Redacted diagnostics
+      description: Optional. Never include full environment contents, credentials, or unrelated command lines.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for an existing report.
+          required: true
+        - label: I removed private or unrelated information.
+          required: true
