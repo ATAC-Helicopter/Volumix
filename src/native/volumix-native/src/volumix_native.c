@@ -40,6 +40,10 @@ struct vm_context {
     vm_node *nodes;
     uint64_t generation;
     int sync_sequence;
+    int command_sequence;
+    int command_result;
+    bool command_pending;
+    bool command_completed;
     bool started;
     bool ready;
 };
@@ -247,10 +251,19 @@ static const struct pw_registry_events vm_registry_events = {
 static void vm_core_done(void *data, uint32_t id, int sequence)
 {
     vm_context *context = data;
-    if (id == PW_ID_CORE && sequence == context->sync_sequence && !context->ready) {
+    if (id != PW_ID_CORE) {
+        return;
+    }
+
+    if (sequence == context->sync_sequence && !context->ready) {
         context->ready = true;
         vm_emit_simple(context, VM_EVENT_READY, NULL);
     }
+    if (context->command_pending && sequence == context->command_sequence) {
+        context->command_result = 0;
+        context->command_completed = true;
+    }
+    pw_thread_loop_signal(context->loop, false);
 }
 
 static void vm_core_error(void *data, uint32_t id, int sequence, int result, const char *message)
@@ -260,7 +273,10 @@ static void vm_core_error(void *data, uint32_t id, int sequence, int result, con
     vm_context *context = data;
     if (result == -EPIPE) {
         context->ready = false;
+        context->command_result = result;
+        context->command_completed = true;
         vm_emit_simple(context, VM_EVENT_DISCONNECTED, message);
+        pw_thread_loop_signal(context->loop, false);
     }
 }
 
@@ -357,6 +373,8 @@ int vm_start(vm_context *context)
     }
     context->started = true;
     context->generation++;
+    context->command_pending = false;
+    context->command_completed = false;
 
     pw_thread_loop_lock(context->loop);
     context->core = pw_context_connect(context->pw_context, NULL, 0);
@@ -388,6 +406,33 @@ static vm_node *vm_find_node(vm_context *context, uint32_t node_id)
     return NULL;
 }
 
+static int vm_roundtrip_locked(vm_context *context)
+{
+    while (context->ready && context->command_pending) {
+        pw_thread_loop_wait(context->loop);
+    }
+    if (context->core == NULL || !context->ready) {
+        return -ENOTCONN;
+    }
+
+    int sequence = pw_core_sync(context->core, PW_ID_CORE, 0);
+    if (sequence < 0) {
+        return sequence;
+    }
+
+    context->command_sequence = sequence;
+    context->command_result = -EINPROGRESS;
+    context->command_pending = true;
+    context->command_completed = false;
+    while (context->ready && !context->command_completed) {
+        pw_thread_loop_wait(context->loop);
+    }
+    int result = context->command_completed ? context->command_result : -EPIPE;
+    context->command_pending = false;
+    pw_thread_loop_signal(context->loop, false);
+    return result;
+}
+
 int vm_set_stream_volume(vm_context *context, uint32_t node_id, float volume)
 {
     if (context == NULL || !context->started || volume < 0.0F || volume > 1.0F) {
@@ -405,6 +450,9 @@ int vm_set_stream_volume(vm_context *context, uint32_t node_id, float volume)
         &builder, SPA_TYPE_OBJECT_Props, SPA_PARAM_Props,
         SPA_PROP_volume, SPA_POD_Float(volume));
     int result = pw_node_set_param(node->proxy, SPA_PARAM_Props, 0, parameter);
+    if (result >= 0) {
+        result = vm_roundtrip_locked(context);
+    }
     pw_thread_loop_unlock(context->loop);
     return result;
 }
@@ -426,6 +474,9 @@ int vm_set_stream_mute(vm_context *context, uint32_t node_id, uint8_t muted)
         &builder, SPA_TYPE_OBJECT_Props, SPA_PARAM_Props,
         SPA_PROP_mute, SPA_POD_Bool(muted != 0));
     int result = pw_node_set_param(node->proxy, SPA_PARAM_Props, 0, parameter);
+    if (result >= 0) {
+        result = vm_roundtrip_locked(context);
+    }
     pw_thread_loop_unlock(context->loop);
     return result;
 }

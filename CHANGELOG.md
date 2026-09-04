@@ -12,6 +12,7 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 ### Fixed
 
 - `BUG-00001` Roadmap synchronization can update managed issues after their GitHub milestone is closed.
+- `BUG-00002` Native volume and mute commands now complete a PipeWire round trip before short-lived clients tear down their connection.
 
 ## [0.1.0-m0] - 2026-09-04
 
