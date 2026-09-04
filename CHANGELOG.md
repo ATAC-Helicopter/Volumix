@@ -4,6 +4,10 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ## [Unreleased]
 
+### Added
+
+- `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
+
 ## [0.1.0-m0] - 2026-09-04
 
 ### Added
