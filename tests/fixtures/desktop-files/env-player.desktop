@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Fixture Player
+Exec=env PLAYER_MODE=desktop "/opt/Fixture Player/player" %F
+Icon=fixture-player

@@ -1,0 +1,36 @@
+name: build-and-test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.3xx
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libpipewire-0.3-dev libspa-0.2-dev libasound2-dev
+      - name: Build
+        run: ./scripts/build.sh
+      - name: Audit roadmap identifiers
+        run: |
+          python3 scripts/roadmap_audit.py
+          python3 -m unittest discover -s tests/scripts -p 'test_*.py'
+      - name: Test
+        run: |
+          ctest --test-dir build/native --output-on-failure
+          dotnet test Volumix.slnx --configuration Debug --no-build
