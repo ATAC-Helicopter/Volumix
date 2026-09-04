@@ -8,6 +8,10 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
 
+### Fixed
+
+- `BUG-00001` Roadmap synchronization can update managed issues after their GitHub milestone is closed.
+
 ## [0.1.0-m0] - 2026-09-04
 
 ### Added

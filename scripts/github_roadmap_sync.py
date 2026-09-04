@@ -187,7 +187,7 @@ def issue_index() -> dict[str, dict[str, object]]:
     return index
 
 
-def sync_issues(tickets: list[Ticket]) -> list[str]:
+def sync_issues(tickets: list[Ticket], milestone_numbers: dict[str, int]) -> list[str]:
     existing = issue_index()
     urls: list[str] = []
     for ticket in tickets:
@@ -207,9 +207,13 @@ def sync_issues(tickets: list[Ticket]) -> list[str]:
             url = str(issue["url"])
             if str(issue.get("body") or "").startswith(MANAGED_MARKER):
                 run_gh([
-                    "issue", "edit", str(number), "--repo", REPOSITORY,
-                    "--title", ticket.issue_title, "--body", ticket.body,
-                    "--milestone", ticket.milestone, "--add-label", labels,
+                    "api", "--method", "PATCH", f"repos/{REPOSITORY}/issues/{number}",
+                    "-f", f"title={ticket.issue_title}", "--raw-field", f"body={ticket.body}",
+                    "-F", f"milestone={milestone_numbers[ticket.milestone]}",
+                ])
+                run_gh([
+                    "api", "--method", "POST", f"repos/{REPOSITORY}/issues/{number}/labels",
+                    *[argument for label in labels.split(",") for argument in ("-f", f"labels[]={label}")],
                 ])
         if ticket.completed:
             run_gh(["issue", "close", str(number), "--repo", REPOSITORY,
@@ -346,7 +350,7 @@ def main() -> int:
         return 0
     ensure_labels()
     milestone_numbers = ensure_milestones()
-    urls = sync_issues(tickets)
+    urls = sync_issues(tickets, milestone_numbers)
     if args.project_number > 0:
         add_to_project(urls, args.project_number)
         sync_project_fields(tickets, args.project_number)
