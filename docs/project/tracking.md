@@ -23,3 +23,11 @@ python3 scripts/roadmap_audit.py
 ```
 
 The check rejects duplicate IDs, malformed execution tickets, ledger collisions, and release-scope changelog bullets without IDs.
+
+Preview the GitHub mirror parser with:
+
+```bash
+python3 scripts/github_roadmap_sync.py
+```
+
+Maintainers may apply missing labels, milestones, issues, and project membership with `--apply --project-number <number>`. The synchronizer only rewrites issue bodies carrying its ownership marker; manually maintained bodies are preserved.
