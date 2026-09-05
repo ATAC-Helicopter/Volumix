@@ -117,7 +117,8 @@ Canonical ticket format:
   - Scope: curate theme-aware repository wordmarks, preserve descriptive asset names, and publish an honest FG Labs project page linked to source and roadmap.
   - Acceptance: repository and website builds use the selected assets, describe the current early-development state accurately, and expose no generated filenames publicly.
 - [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
-  - Scope: collect evidence for Firefox, Electron, Proton fixture, restart, sanitizers, and current limitations.
+  - Status: In progress; evidence is assembled in docs/development/m0.2-qualification.md. GitHub mainline enforcement remains a closure dependency.
+  - Scope: collect evidence for Brave/browser, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
 
 ---
