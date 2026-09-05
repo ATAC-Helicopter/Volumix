@@ -24,10 +24,20 @@ public sealed class XdgDesktopApplicationIndex : IDesktopApplicationIndex
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(executablePath);
         string name = Path.GetFileName(executablePath);
-        return _entries.Where(entry => entry.Executable is not null &&
+        DesktopApplicationEntry[] matches = _entries.Where(entry => entry.Executable is not null &&
             (PathEquals(entry.Executable, executablePath) ||
              Path.GetFileName(entry.Executable).Equals(name, StringComparison.OrdinalIgnoreCase)))
             .ToArray();
+        DesktopApplicationEntry[] visible = matches.Where(entry => !entry.NoDisplay).ToArray();
+        // A hidden URL handler can share its application's executable and icon.
+        // Collapse only this corroborated helper shape; retain other ambiguity.
+        if (visible.Length == 1 && matches.All(entry => entry == visible[0] ||
+            (entry.NoDisplay && PathEquals(entry.Executable!, visible[0].Executable!) &&
+             entry.Icon is not null && entry.Icon == visible[0].Icon)))
+        {
+            return visible;
+        }
+        return matches;
     }
 
     public IReadOnlyList<DesktopApplicationEntry> FindById(string desktopFileId)

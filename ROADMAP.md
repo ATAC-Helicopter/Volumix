@@ -92,7 +92,7 @@ Canonical ticket format:
 - [x] `VMX-0012` `P1` Qualify browser multi-stream identity with Brave.
   - Scope: multiple Brave playback streams, launcher-wrapper `/proc`/desktop evidence, grouping, command fan-out, and stream recreation.
   - Acceptance: Brave appears once with a stable canonical XDG identity and every owned session follows commands.
-- [ ] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
+- [x] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
   - Scope: renderer/process ambiguity, desktop corroboration, grouping, and diagnostics.
   - Acceptance: the user-facing identity is the installed application, not Electron or a renderer helper.
 - [x] `VMX-0014` `P0` Add the first Steam/Proton identity fixture and qualification path.
@@ -117,7 +117,8 @@ Canonical ticket format:
   - Scope: curate theme-aware repository wordmarks, preserve descriptive asset names, and publish an honest FG Labs project page linked to source and roadmap.
   - Acceptance: repository and website builds use the selected assets, describe the current early-development state accurately, and expose no generated filenames publicly.
 - [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
-  - Scope: collect evidence for Firefox, Electron, Proton fixture, restart, sanitizers, and current limitations.
+  - Status: In progress; evidence is assembled in docs/development/m0.2-qualification.md. GitHub mainline enforcement remains a closure dependency.
+  - Scope: collect evidence for Brave/browser, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
 
 ---
