@@ -8,6 +8,8 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
 - `VMX-0012` Deterministic browser fixtures and a real Brave multi-stream qualification covering XDG identity, grouping, command fan-out, removal, and recreation.
+- `VMX-0015` End-to-end PipeWire restart qualification covering unavailable state, bounded reconnect, registry replacement, stale-event rejection, and recovered commands.
+- `VMX-0016` ASAN/UBSAN CI coverage for native lifecycle, callback ownership, rapid node churn, command teardown, and PipeWire reconnect.
 - `VMX-0018` Theme-aware repository wordmarks and curated public presentation artwork for the FG Labs project page.
 
 ### Changed
