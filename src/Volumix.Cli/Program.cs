@@ -28,7 +28,8 @@ try
 {
     await using var backend = new ReconnectingAudioBackend(() => new NativeAudioBackend());
     var desktopIndex = new XdgDesktopApplicationIndex();
-    var resolver = new ApplicationResolver(new LinuxProcMetadataProvider(), desktopIndex);
+    var resolver = new ApplicationResolver(new LinuxProcMetadataProvider(), desktopIndex,
+        new SteamApplicationResolver(new SteamApplicationIndex()));
     var coordinator = new MixerStateCoordinator(resolver);
     if (watch)
     {

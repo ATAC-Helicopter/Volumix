@@ -95,8 +95,7 @@ Canonical ticket format:
 - [ ] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
   - Scope: renderer/process ambiguity, desktop corroboration, grouping, and diagnostics.
   - Acceptance: the user-facing identity is the installed application, not Electron or a renderer helper.
-- [ ] `VMX-0014` `P0` Add the first Steam/Proton identity fixture and qualification path.
-  - Status: In progress; bounded, allowlisted process environment evidence is implemented. Steam metadata corroboration and real-game qualification remain required.
+- [x] `VMX-0014` `P0` Add the first Steam/Proton identity fixture and qualification path.
   - Scope: synthetic process/compat metadata, resolver seam implementation, stable Steam ID, and one real-game comparison when available.
   - Acceptance: a Proton audio stream resolves to `steam:<app-id>` without using Wine loader or PID as identity.
 - [x] `VMX-0015` `P0` Qualify PipeWire restart and reconnect end to end.

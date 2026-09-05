@@ -20,7 +20,7 @@
 Volumix resolves PipeWire playback nodes into stable logical applications and groups every session owned by an application behind one mixer target. Three browser streams should look like one **Brave** or **Firefox** control—not three nodes, renderer processes, or PIDs.
 
 > [!IMPORTANT]
-> Volumix is an early technical spike, not a release-ready mixer. Packaging, persistence, Steam/Proton resolution, MIDI control, and the finished interface are not implemented yet.
+> Volumix is an early technical spike, not a release-ready mixer. Packaging, persistence, MIDI control, and the finished interface are not implemented yet. Initial Steam/Proton identification requires corroborating local process, compatibility-directory, and installed-manifest evidence.
 
 ## What works today
 

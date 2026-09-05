@@ -17,7 +17,9 @@ public enum IdentityEvidenceKind
     ProcessExecutable,
     DesktopEntry,
     AmbiguousDesktopEntry,
-    Fallback
+    Fallback,
+    ProcessEnvironment,
+    InstallationMetadata
 }
 
 public sealed record IdentityEvidence(
