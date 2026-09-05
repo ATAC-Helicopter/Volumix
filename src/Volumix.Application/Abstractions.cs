@@ -7,7 +7,11 @@ public interface IApplicationResolver
     ValueTask<ApplicationIdentity> ResolveAsync(AudioSession session, CancellationToken cancellationToken = default);
 }
 
-public sealed record ProcessMetadata(int ProcessId, string? ExecutablePath, IReadOnlyList<string> Arguments);
+public sealed record ProcessMetadata(int ProcessId, string? ExecutablePath, IReadOnlyList<string> Arguments)
+{
+    public IReadOnlyDictionary<string, string> IdentityEnvironment { get; init; } =
+        new Dictionary<string, string>(StringComparer.Ordinal);
+}
 
 public interface IProcessMetadataProvider
 {

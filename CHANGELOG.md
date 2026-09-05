@@ -6,6 +6,8 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ### Added
 
+- `VMX-0014` Initial Steam/Proton identification using bounded process evidence, cached library/manifests, conflict fixtures, and a read-only Euro Truck Simulator 2 observation.
+
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
 - `VMX-0012` Deterministic browser fixtures and a real Brave multi-stream qualification covering XDG identity, grouping, command fan-out, removal, and recreation.
 - `VMX-0015` End-to-end PipeWire restart qualification covering unavailable state, bounded reconnect, registry replacement, stale-event rejection, and recovered commands.
