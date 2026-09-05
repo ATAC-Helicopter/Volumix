@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Visual Studio Code - URL Handler
+Exec=/usr/share/code/code --open-url %U
+Icon=vscode
+NoDisplay=true

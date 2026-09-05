@@ -89,6 +89,32 @@ public sealed class ApplicationResolverTests
         Assert.Equal(first.Id, second.Id);
     }
 
+    [Fact]
+    public async Task ElectronAudioHelperResolvesToInstalledApplicationDespiteGenericMetadata()
+    {
+        var resolver = Resolver(new ProcessMetadata(42, "/usr/share/code/code", ["--type=utility"]));
+        ApplicationIdentity identity = await resolver.ResolveAsync(Session(42, null) with
+        {
+            ApplicationName = "Chromium",
+            ProcessBinary = "code",
+            ApplicationIconName = "chromium-browser"
+        }, TestContext.Current.CancellationToken);
+        Assert.Equal("xdg:code", identity.Id.Value);
+        Assert.Equal("Visual Studio Code", identity.DisplayName);
+        Assert.Equal("vscode", identity.Icon?.Value);
+        Assert.Equal(IdentityConfidence.High, identity.Confidence);
+        Assert.Contains(identity.Evidence, item => item.Kind == IdentityEvidenceKind.ProcessExecutable);
+        Assert.Contains(identity.Evidence, item => item.Kind == IdentityEvidenceKind.DesktopEntry);
+        var coordinator = new MixerStateCoordinator(resolver);
+        await coordinator.ApplyAsync(new SessionAdded(1, Session(42, null) with { Id = new("electron-one") }),
+            TestContext.Current.CancellationToken);
+        await coordinator.ApplyAsync(new SessionAdded(1, Session(43, null) with { Id = new("electron-two"), PipeWireNodeId = 82 }),
+            TestContext.Current.CancellationToken);
+        RuntimeApplication application = Assert.Single(coordinator.Current.Applications);
+        Assert.Equal("xdg:code", application.Identity.Id.Value);
+        Assert.Equal(2, application.Sessions.Count);
+    }
+
     private static ApplicationResolver Resolver(ProcessMetadata? process) => new(
         new FixedProcessProvider(process), new XdgDesktopApplicationIndex([DesktopFixtures]));
 

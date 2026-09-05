@@ -92,7 +92,7 @@ Canonical ticket format:
 - [x] `VMX-0012` `P1` Qualify browser multi-stream identity with Brave.
   - Scope: multiple Brave playback streams, launcher-wrapper `/proc`/desktop evidence, grouping, command fan-out, and stream recreation.
   - Acceptance: Brave appears once with a stable canonical XDG identity and every owned session follows commands.
-- [ ] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
+- [x] `VMX-0013` `P1` Qualify Discord or equivalent Electron application identity.
   - Scope: renderer/process ambiguity, desktop corroboration, grouping, and diagnostics.
   - Acceptance: the user-facing identity is the installed application, not Electron or a renderer helper.
 - [x] `VMX-0014` `P0` Add the first Steam/Proton identity fixture and qualification path.

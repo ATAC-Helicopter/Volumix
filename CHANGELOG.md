@@ -6,6 +6,8 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ### Added
 
+- `VMX-0013` Electron identity fixtures and a real VS Code terminal-bell observation resolve generic Chromium audio metadata to the installed application's name and icon.
+
 - `VMX-0014` Initial Steam/Proton identification using bounded process evidence, cached library/manifests, conflict fixtures, and a read-only Euro Truck Simulator 2 observation.
 
 - `VMX-0011` Hardware-free PipeWire integration coverage for application discovery, multi-session control, removal, daemon restart, and managed reconnect.
