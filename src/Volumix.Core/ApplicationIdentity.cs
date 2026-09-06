@@ -17,6 +17,7 @@ public enum IdentityEvidenceKind
     ProcessExecutable,
     DesktopEntry,
     AmbiguousDesktopEntry,
+    ConflictingEvidence,
     Fallback,
     ProcessEnvironment,
     InstallationMetadata

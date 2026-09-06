@@ -45,6 +45,9 @@ public sealed class ApplicationResolverTests
         ApplicationIdentity identity = await resolver.ResolveAsync(Session(processId: 7), TestContext.Current.CancellationToken);
         Assert.Equal(new ApplicationId("exe:/usr/bin/player"), identity.Id);
         Assert.Contains(identity.Evidence, evidence => evidence.Kind == IdentityEvidenceKind.AmbiguousDesktopEntry);
+        IdentityEvidence conflict = Assert.Single(identity.Evidence,
+            evidence => evidence.Kind == IdentityEvidenceKind.ConflictingEvidence);
+        Assert.Equal("one=100, two=100", conflict.Value);
     }
 
     [Fact]
@@ -78,6 +81,44 @@ public sealed class ApplicationResolverTests
         Assert.Equal(IdentityConfidence.High, identity.Confidence);
         Assert.Contains(identity.Evidence, evidence =>
             evidence.Kind == IdentityEvidenceKind.DesktopEntry && evidence.Value == "brave-browser");
+    }
+
+    [Fact]
+    public async Task AgreeingExecutableAndApplicationIdStrengthenDesktopIdentity()
+    {
+        var resolver = Resolver(new ProcessMetadata(10, "/opt/discord/discord", ["discord"]));
+        AudioSession session = Session(processId: 10, applicationId: "conflict-discord") with
+        {
+            ApplicationName = "Discord",
+            ProcessBinary = "discord"
+        };
+
+        ApplicationIdentity identity = await resolver.ResolveAsync(session, TestContext.Current.CancellationToken);
+
+        Assert.Equal(new ApplicationId("xdg:conflict-discord"), identity.Id);
+        Assert.Equal("Discord", identity.DisplayName);
+        Assert.Equal(IdentityConfidence.High, identity.Confidence);
+        Assert.True(identity.Evidence.Count(item =>
+            item.Kind == IdentityEvidenceKind.DesktopEntry && item.Value == "conflict-discord") >= 2);
+    }
+
+    [Fact]
+    public async Task ConflictingStrongEvidenceFallsBackWithoutGuessing()
+    {
+        var resolver = Resolver(new ProcessMetadata(11, "/opt/slack/slack", ["slack"]));
+        AudioSession session = Session(processId: 11, applicationId: "conflict-discord") with
+        {
+            ApplicationName = "Discord",
+            ProcessBinary = null
+        };
+
+        ApplicationIdentity identity = await resolver.ResolveAsync(session, TestContext.Current.CancellationToken);
+
+        Assert.Equal(new ApplicationId("exe:/opt/slack/slack"), identity.Id);
+        Assert.Equal(IdentityConfidence.Medium, identity.Confidence);
+        IdentityEvidence conflict = Assert.Single(identity.Evidence,
+            item => item.Kind == IdentityEvidenceKind.ConflictingEvidence);
+        Assert.Equal("conflict-slack=100, conflict-discord=85", conflict.Value);
     }
 
     [Fact]
