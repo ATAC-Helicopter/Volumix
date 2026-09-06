@@ -18,6 +18,7 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ### Changed
 
+- `VMX-0201` Application identity now scores executable and desktop metadata together, records conflicting candidates, and falls back safely instead of guessing.
 - `VMX-0012` Exact PipeWire desktop-ID hints can corroborate installed applications whose launchers wrap a differently named runtime executable.
 
 ### Fixed

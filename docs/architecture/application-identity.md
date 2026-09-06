@@ -2,15 +2,18 @@
 
 The resolver returns an `ApplicationIdentity`, confidence, and inspectable evidence. Persistent canonical IDs never contain PID.
 
-The current M0 path uses:
+The resolver evaluates these evidence sources together:
 
 1. PipeWire application/process metadata;
 2. `/proc/<pid>/exe` when available;
 3. executable basename/path;
-4. one cached XDG desktop-entry index;
-5. a stable hash of the best non-PID fallback evidence.
+4. PipeWire application and icon identifiers;
+5. one cached XDG desktop-entry index;
+6. a stable hash of the best non-PID fallback evidence.
 
 Examples include `xdg:org.mozilla.firefox`, `exe:/usr/bin/vlc`, and `unknown:<hash>`. Ambiguous desktop matches reduce confidence instead of guessing.
+
+Desktop candidates receive fixed weights for exact executable paths, executable basenames, application IDs, and icon IDs. Scores are accumulated by canonical desktop ID and candidates are ordered deterministically. Agreeing independent evidence raises confidence. When two strong candidates remain too close, the resolver records `ConflictingEvidence` and falls back to the stable executable or PipeWire identity instead of choosing a desktop application. Scores and rejected conflicts remain inspectable in the evidence list.
 
 M0.2 implements the Steam resolver seam. Relevant Wine/Windows processes supply a bounded allowlist of environment evidence. A cached index discovers libraries through `libraryfolders.vdf` and reads installed app manifests. Agreeing numeric Steam IDs, an indexed compatibility directory, and an installed manifest produce `steam:<app-id>` at High confidence. Conflicts or missing evidence fall back to the ordinary resolver. The index refreshes when the CLI is restarted; automatic refresh and broader Wine/native Steam coverage remain in milestone 0.4.
 

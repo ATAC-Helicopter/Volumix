@@ -1,11 +1,93 @@
-bin/
-obj/
+# .NET build and test output
+**/bin/
+**/obj/
+artifacts/
+out/
+output/
+publish/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage.*
+
+# NuGet packages and local feeds
+packages/
+.nuget/
+*.nupkg
+*.snupkg
+
+# Native/CMake build output
 build/
-.vs/
-.idea/
-*.user
-*.swp
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Makefile
+*.a
+*.o
+*.obj
 *.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+core
+core.*
+
+# IDE and editor state
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userprefs
+*.csproj.user
+*.sln.iml
+*.swp
+*.swo
+*~
+
+# Python caches and tooling
 __pycache__/
 *.py[cod]
 .coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.venv/
+venv/
+
+# Local environment and runtime state
+.env
+.env.*
+!.env.example
+*.log
+*.pid
+.volumix/
+
+# Generated packages
+dist/
+.flatpak-builder/
+*.AppImage
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+
+# Operating-system metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.orig

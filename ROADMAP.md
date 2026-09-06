@@ -125,7 +125,7 @@ Canonical ticket format:
 
 ## 0.2 — Application identity
 
-- [ ] `VMX-0201` `P0` Replace linear resolver decisions with deterministic multi-evidence scoring and conflict handling.
+- [x] `VMX-0201` `P0` Replace linear resolver decisions with deterministic multi-evidence scoring and conflict handling.
 - [ ] `VMX-0202` `P1` Implement secure local icon resolution and bounded caching.
 - [ ] `VMX-0203` `P1` Add Flatpak-first canonical identity and fixtures.
 - [ ] `VMX-0204` `P2` Add Snap wrapper identity without making Snap a dependency.

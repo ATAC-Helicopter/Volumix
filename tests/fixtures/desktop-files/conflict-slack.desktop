@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Slack
+Exec=/opt/slack/slack
+Icon=slack
+StartupWMClass=Slack
