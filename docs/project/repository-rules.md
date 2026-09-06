@@ -18,8 +18,6 @@ Pull-request review count and CODEOWNERS approval become required when a second 
 
 ## Current enforcement
 
-As of 2026-09-04, Volumix is private and GitHub rejects repository rulesets for the current account plan with HTTP 403. Enabling this ruleset therefore requires either a GitHub plan that supports rulesets for private repositories or an intentional change to public visibility. The repository remains private until its owner makes that separate visibility decision.
+As of 2026-09-06, Volumix is public and GitHub ruleset `22393100` actively protects `main`. GitHub reports the branch as protected. Pull requests, resolved review conversations, and strict successful `linux` and `native-sanitizers` checks are required; deletion and non-fast-forward updates are blocked. Administrators retain the documented emergency/recovery bypass.
 
-Until GitHub-side enforcement is available, maintainers follow the intended policy manually: use an ID-bearing branch and pull request, wait for a green `linux` check, merge without rewriting published history, and never delete or force-push `main`.
-
-The reviewable API payload is [main-ruleset.json](main-ruleset.json). After the account/visibility prerequisite is resolved, apply it with `gh api --method POST repos/ATAC-Helicopter/Volumix/rulesets --input docs/project/main-ruleset.json`, then read back the active ruleset and verify the target, bypass policy, pull-request requirements, and both strict status checks before closing `VMX-0017`.
+The reviewable API payload is [main-ruleset.json](main-ruleset.json). After intentional policy changes, update that file first, apply it through the GitHub rules API, and read the active ruleset back to verify the target, bypass policy, merge method, pull-request requirements, and strict status checks.

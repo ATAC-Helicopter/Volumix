@@ -1,0 +1,117 @@
+name: source-release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to publish
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+
+jobs:
+  verify:
+    name: Verify release source
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.3xx
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libpipewire-0.3-dev libspa-0.2-dev libasound2-dev pipewire-bin ripgrep
+      - name: Validate tag, notes, and roadmap
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(dotnet msbuild src/Volumix.Core/Volumix.Core.csproj -getProperty:Version --nologo)"
+          test "$RELEASE_TAG" = "v$version"
+          test -f "docs/releases/$RELEASE_TAG.md"
+          grep -Fq "**Tag:** `$RELEASE_TAG`" ROADMAP.md
+          python3 scripts/roadmap_audit.py
+          python3 -m unittest discover -s tests/scripts -p 'test_*.py'
+      - name: Build and test
+        run: ./scripts/test.sh
+      - name: Isolated PipeWire integration test
+        run: ./scripts/test-pipewire-integration.sh
+
+  native-sanitizers:
+    name: Verify native sanitizers
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASAN_OPTIONS: detect_leaks=0:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.3xx
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libpipewire-0.3-dev libspa-0.2-dev libasound2-dev pipewire-bin ripgrep
+      - name: Build with ASAN and UBSAN
+        env:
+          CFLAGS: -fsanitize=address,undefined -fno-omit-frame-pointer
+        run: ./scripts/build.sh
+      - name: Test native lifecycle and PipeWire restart
+        run: |
+          ctest --test-dir build/native --output-on-failure
+          export VOLUMIX_SANITIZER_PRELOAD="$(gcc -print-file-name=libasan.so):$(gcc -print-file-name=libubsan.so)"
+          ./scripts/test-pipewire-integration.sh
+
+  publish:
+    name: Publish source prerelease
+    needs: [verify, native-sanitizers]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          fetch-depth: 0
+      - name: Create reproducible source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          archive="volumix-$version-source.tar.gz"
+          git archive --format=tar.gz --prefix="volumix-$version/" --output="$archive" "$RELEASE_TAG"
+          sha256sum "$archive" > "$archive.sha256"
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          archive="volumix-$version-source.tar.gz"
+          args=("$RELEASE_TAG" "$archive" "$archive.sha256" --verify-tag --title "Volumix $version" --notes-file "docs/releases/$RELEASE_TAG.md")
+          if [[ "$RELEASE_TAG" == *-* ]]; then
+            args+=(--prerelease)
+          fi
+          gh release create "${args[@]}"

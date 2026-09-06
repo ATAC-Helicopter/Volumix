@@ -28,8 +28,8 @@ Canonical ticket format:
 | Milestone | State | Outcome |
 |---|---|---|
 | `M0` | Complete | Native PipeWire, identity, aggregation, managed state, CLI, and repository foundation |
-| `M0.2` | Active | Real-application identity and isolated reconnect qualification |
-| `0.2` | Planned | Hardened application identity and icon resolution |
+| `M0.2` | Complete | Real-application identity and isolated reconnect qualification |
+| `0.2` | Active | Hardened application identity and icon resolution |
 | `0.3` | Planned | Durable application preferences and stable mixer behavior |
 | `0.4` | Planned | Steam, Proton, and Wine identity |
 | `0.5` | Planned | Accessible production mixer and tray UI |
@@ -84,7 +84,9 @@ Canonical ticket format:
 
 ## M0.2 — Real application and reconnect qualification
 
-**Status:** Active.
+**Status:** Complete and published.
+
+**Tag:** `v0.2.0-alpha.1`
 
 - [x] `VMX-0011` `P0` Build an isolated PipeWire integration-test harness.
   - Scope: controlled daemon/socket, silent streams, deterministic teardown, and no mutation of unrelated user sessions.
@@ -104,7 +106,7 @@ Canonical ticket format:
 - [x] `VMX-0016` `P1` Harden native ownership and sanitizer coverage.
   - Scope: ASAN/UBSAN test job, callback lifetime stress, rapid node churn, and shutdown races.
   - Acceptance: native tests are clean under sanitizers with deterministic lifecycle behavior.
-- [ ] `VMX-0017` `P1` Enforce protected mainline collaboration on GitHub.
+- [x] `VMX-0017` `P1` Enforce protected mainline collaboration on GitHub.
   - Scope: protect `main` from deletion and force-pushes, require pull requests and the strict `linux` status check, and preserve an auditable repository policy.
   - Acceptance: an active GitHub ruleset enforces the documented policy; any hosting-plan or visibility dependency remains explicitly tracked until resolved.
 - [x] `BUG-00001` `P0` Keep roadmap synchronization working after a milestone closes.
@@ -116,8 +118,10 @@ Canonical ticket format:
 - [x] `VMX-0018` `P1` Establish the first public Volumix branding and project presence.
   - Scope: curate theme-aware repository wordmarks, preserve descriptive asset names, and publish an honest FG Labs project page linked to source and roadmap.
   - Acceptance: repository and website builds use the selected assets, describe the current early-development state accurately, and expose no generated filenames publicly.
-- [ ] `REL-00002` `P0` Close the M0.2 qualification gate.
-  - Status: In progress; evidence is assembled in docs/development/m0.2-qualification.md. GitHub mainline enforcement remains a closure dependency.
+- [x] `VMX-0019` `P1` Prepare the public repository and source-only alpha release path.
+  - Scope: public metadata, security settings, contributor-facing setup validation, tag-driven source releases, checksums, release notes, and FG Labs release visibility.
+  - Acceptance: the public repository has protected mainline collaboration, a reproducible prerelease workflow, current documentation, and a discoverable source-only alpha release with no unsupported binary claims.
+- [x] `REL-00002` `P0` Close the M0.2 qualification gate.
   - Scope: collect evidence for Brave/browser, Electron, Proton fixture, restart, sanitizers, and current limitations.
   - Acceptance: M0.2 evidence is reproducible and no unresolved P0 item remains.
 
@@ -203,7 +207,7 @@ Canonical ticket format:
 
 ## Identifier ledger
 
-- Next `VMX-00xx`: `VMX-0019`
+- Next `VMX-00xx`: `VMX-0020`
 - Next `VMX-02xx`: `VMX-0207`
 - Next `VMX-03xx`: `VMX-0306`
 - Next `VMX-04xx`: `VMX-0406`
