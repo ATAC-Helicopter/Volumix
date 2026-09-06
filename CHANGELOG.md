@@ -4,8 +4,13 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 
 ## [Unreleased]
 
+## [0.2.0-alpha.1] - 2026-09-06
+
 ### Added
 
+- `VMX-0019` Public repository metadata, contributor setup validation, and tag-driven source-only alpha releases with SHA-256 checksums.
+- `VMX-0017` Active GitHub ruleset protecting `main` through pull requests and strict Linux/native sanitizer checks.
+- `REL-00002` Reproducible M0.2 qualification evidence covering real browser/Electron identity, Proton evidence, PipeWire restart recovery, and native sanitizer runs.
 - `VMX-0013` Electron identity fixtures and a real VS Code terminal-bell observation resolve generic Chromium audio metadata to the installed application's name and icon.
 
 - `VMX-0014` Initial Steam/Proton identification using bounded process evidence, cached library/manifests, conflict fixtures, and a read-only Euro Truck Simulator 2 observation.
@@ -42,3 +47,4 @@ All notable changes will be documented here. The format follows [Keep a Changelo
 - `REL-00001` M0 build, test, native lifecycle, and live PipeWire evidence baseline.
 
 [0.1.0-m0]: https://github.com/ATAC-Helicopter/Volumix/releases/tag/v0.1.0-m0
+[0.2.0-alpha.1]: https://github.com/ATAC-Helicopter/Volumix/releases/tag/v0.2.0-alpha.1

@@ -17,4 +17,16 @@ sudo apt install \
 
 Install the .NET 10 SDK using the supported Microsoft or distribution instructions. The repository pins SDK feature band 10.0.300 and rolls forward to a newer patch in that band.
 
+Validate an existing environment without changing it:
+
+```bash
+./scripts/bootstrap-linux.sh
+```
+
+On Debian/Ubuntu, install missing native packages and then validate with:
+
+```bash
+./scripts/bootstrap-linux.sh --install
+```
+
 The app connects to the current user's PipeWire instance. It does not require root or a system service.

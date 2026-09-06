@@ -12,21 +12,23 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-6f42c1.svg"></a>
+  <a href="https://github.com/ATAC-Helicopter/Volumix/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/ATAC-Helicopter/Volumix?include_prereleases&sort=semver"></a>
   <img alt="Platform: Linux" src="https://img.shields.io/badge/platform-Linux-fcc624.svg">
   <img alt=".NET 10" src="https://img.shields.io/badge/.NET-10-512bd4.svg">
-  <img alt="Status: M0 spike" src="https://img.shields.io/badge/status-M0%20technical%20spike-orange.svg">
+  <img alt="Status: public alpha" src="https://img.shields.io/badge/status-public%20alpha-orange.svg">
 </p>
 
 Volumix resolves PipeWire playback nodes into stable logical applications and groups every session owned by an application behind one mixer target. Three browser streams should look like one **Brave** or **Firefox** control—not three nodes, renderer processes, or PIDs.
 
 > [!IMPORTANT]
-> Volumix is an early technical spike, not a release-ready mixer. Packaging, persistence, MIDI control, and the finished interface are not implemented yet. Initial Steam/Proton identification requires corroborating local process, compatibility-directory, and installed-manifest evidence.
+> Volumix is a source-only public alpha, not an end-user release. No supported binary package is published yet. Packaging, persistence, MIDI control, and the finished interface are not implemented. Initial Steam/Proton identification requires corroborating local process, compatibility-directory, and installed-manifest evidence.
 
 ## What works today
 
 - Native PipeWire registry connection and playback-node events.
 - Versioned C ABI with copied, serialized managed events.
 - Linux `/proc` and cached XDG desktop-entry identity resolution.
+- Deterministic multi-evidence scoring with safe conflict fallback.
 - Stable fallback identities that never use PID.
 - Multi-session application grouping and application-wide volume/mute commands.
 - Managed reconnect supervision with generation isolation.
@@ -48,7 +50,7 @@ UI / MIDI / CLI / D-Bus
 
 The complete product contract is in [TECH_SPEC.md](TECH_SPEC.md). Start with the shorter [architecture overview](docs/architecture/overview.md) when contributing.
 
-Planning is tracked in the canonical [ROADMAP.md](ROADMAP.md) and mirrored to the private [Volumix Roadmap GitHub Project](https://github.com/users/ATAC-Helicopter/projects/9).
+Planning is tracked in the canonical [ROADMAP.md](ROADMAP.md) and mirrored to the [Volumix Roadmap GitHub Project](https://github.com/users/ATAC-Helicopter/projects/9). Alpha source snapshots and their checksums are published on [GitHub Releases](https://github.com/ATAC-Helicopter/Volumix/releases).
 
 ## Build
 
